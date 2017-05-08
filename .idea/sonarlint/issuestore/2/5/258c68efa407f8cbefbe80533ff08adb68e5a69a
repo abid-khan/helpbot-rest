@@ -1,6 +1,0 @@
-
-V
-squid:S106";Replace this usage of System.out or System.err by a logger.(”ı’²8®’¾+
-fsquid:S2674"JCheck the return value of the "read" call to see how many bytes were read.(ÂõËö8®’¾+
-Vsquid:S1118":Add a private constructor to hide the implicit public one.(¤ü÷8®’¾+
-csquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(ÖÛ¡‚8®’¾+

@@ -13,4 +13,7 @@ import lombok.Setter;
 public class Meeting {
     private String summary;
     private Long startTime;
+    private String hangoutLink;
+    private String description;
+    private String location;
 }

@@ -14,7 +14,6 @@
 /Users/abidkhan/Desktop/Projects/jira/src/main/java/com/appdirect/jira/config/GoogleConfig.java
 /Users/abidkhan/Desktop/Projects/jira/src/main/java/com/appdirect/jira/props/IssueQuery.java
 /Users/abidkhan/Desktop/Projects/jira/src/main/java/com/appdirect/jira/props/OAuth.java
-/Users/abidkhan/Desktop/Projects/jira/src/main/java/com/appdirect/jira/api/ProjectController.java
 /Users/abidkhan/Desktop/Projects/jira/src/main/java/com/appdirect/jira/vo/Issue.java
 /Users/abidkhan/Desktop/Projects/jira/src/main/java/com/appdirect/jira/api/GoogleCallbackController.java
 /Users/abidkhan/Desktop/Projects/jira/src/main/java/com/appdirect/jira/service/ProjectService.java

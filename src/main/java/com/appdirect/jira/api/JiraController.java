@@ -18,15 +18,19 @@ import com.appdirect.jira.helper.jira.JiraOAuthHelper;
 import com.appdirect.jira.props.IssueQuery;
 import com.appdirect.jira.repository.JiraUserRepository;
 import com.appdirect.jira.service.IssueService;
+import com.appdirect.jira.service.ProjectService;
 
 /**
  * Created by abidkhan on 25/04/17.
  */
 @Component
-@Path("/jira/issues")
+@Path("/jira")
 @EnableConfigurationProperties(IssueQuery.class)
 @Slf4j
 public class JiraController {
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private IssueService issueService;
@@ -41,7 +45,16 @@ public class JiraController {
     private JiraUserRepository jiraUserRepository;
 
     @GET
-    @Path("/myopen")
+    @Path("/projects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllProjects(@QueryParam("userId") String userId){
+        JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
+        return Response.ok().entity(projectService.findAllProjects(jiraUser.getAccessToken(), jiraUser.getSecret())).type(MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+    @GET
+    @Path("/issues/myopen")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMyIssues(@QueryParam("userId") String userId) {
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
@@ -50,7 +63,7 @@ public class JiraController {
     }
 
     @GET
-    @Path("/reported-by-me")
+    @Path("/issues/reported-by-me")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMyReportedIssues(@QueryParam("userId") String userId) {
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
@@ -59,7 +72,7 @@ public class JiraController {
     }
 
     @GET
-    @Path("/i-am-mentioned")
+    @Path("/issues/i-am-mentioned")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMentionedIssues(@QueryParam("userId") String userId) {
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);

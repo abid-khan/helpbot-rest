@@ -14,7 +14,6 @@ com/appdirect/jira/vo/Issues.class
 com/appdirect/jira/vo/Project.class
 com/appdirect/jira/helper/google/GoogleOAuthHelper.class
 com/appdirect/jira/api/OAuthController.class
-com/appdirect/jira/api/ProjectController.class
 com/appdirect/jira/service/ProjectService.class
 com/appdirect/jira/helper/jira/JiraRestClientHelper$1.class
 com/appdirect/jira/vo/Meetings.class

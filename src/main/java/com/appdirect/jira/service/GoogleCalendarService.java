@@ -53,7 +53,7 @@ public class GoogleCalendarService {
                 log.info("Building meeting detail");
                 for (Event event : events.getItems()) {
                     log.info("Meeting summary {}", event.getSummary());
-                    meetings.add(Meeting.builder().summary(event.getSummary()).startTime(event.getStart().getDateTime().getValue()).build());
+                    meetings.add(Meeting.builder().summary(event.getSummary()).startTime(event.getStart().getDateTime().getValue()).hangoutLink(event.getHangoutLink()).description(event.getDescription()).location(event.getLocation()).build());
                 }
                 log.info("Meetings count {}", meetings.size());
             }
