@@ -1,32 +1,86 @@
 package com.appdirect.jira.api;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Component;
 
-import com.appdirect.jira.helper.google.OAuthHelper;
+import com.appdirect.jira.entity.JiraUser;
+import com.appdirect.jira.helper.google.GoogleOAuthHelper;
+import com.appdirect.jira.helper.jira.JiraOAuthHelper;
+import com.appdirect.jira.helper.jira.OAuthHolder;
+import com.appdirect.jira.repository.JiraUserRepository;
+import com.appdirect.jira.vo.JiraOauth;
+import com.google.api.client.auth.oauth2.Credential;
 
 /**
- * Created by abidkhan on 28/04/17.
+ * Created by abidkhan on 07/05/17.
  */
-@Controller
-@RequestMapping("/calendar")
+@Component
+@Path("/oauth")
 @Slf4j
 public class OAuthController {
     @Autowired
-    private OAuthHelper OAuthHelper;
+    private JiraOAuthHelper jiraOAuthHelper;
+    @Autowired
+    private JiraUserRepository jiraUserRepository;
 
-    @RequestMapping(method = RequestMethod.GET,path = "/google",produces ={MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public String calendar(Model model, @RequestParam("userId") String userId) {
-        String url = OAuthHelper.getOAuthUrl(userId);
-        log.info("Generated oauth URL for userId {} as {}", userId, url);
-        model.addAttribute("calendarLink", url);
-        return "google";
+    @Autowired
+    private GoogleOAuthHelper googleOAuthHelper;
+
+    @GET
+    @Path("/jira")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response jira(@QueryParam("userId") String userId) {
+        JiraOauth jiraOauth = null;
+        JiraUser jiraUser = null;
+        String url = null;
+        try {
+            jiraUser = jiraUserRepository.findByUserId(userId);
+
+            if (null == jiraUser || jiraUser.getAccessToken() == null) {
+                OAuthHolder OAuthHolder = jiraOAuthHelper.getRequestToken(userId);
+                jiraUser = JiraUser.builder().userId(userId).requestToken(OAuthHolder.getToken()).secret(OAuthHolder.getSecret()).build();
+                jiraUserRepository.save(jiraUser);
+                url = jiraOAuthHelper.getAuthorizeUrlForToken(jiraUser.getRequestToken());
+            }
+            return Response.status(200).entity(JiraOauth.builder().url(url).build()).type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (Exception ex) {
+            return Response.serverError().entity(null).type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/google")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response google(@QueryParam("userId") String userId) {
+        JiraOauth jiraOauth = null;
+        JiraUser jiraUser = null;
+        String url = null;
+        try {
+            Credential credential = googleOAuthHelper.loadCredential(userId);
+            if (null == credential) {
+                log.info("No credential present for userId {}.Generating oauth URL", userId);
+                url= googleOAuthHelper.getOAuthUrl(userId);
+            }
+
+            return Response.status(200).entity(JiraOauth.builder().url(url).build()).type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (Exception ex) {
+            return Response.serverError().entity(null).type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
     }
 }

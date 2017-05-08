@@ -13,5 +13,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Meetings {
+    private String oAuthUrl;
     private List<Meeting> items;
 }

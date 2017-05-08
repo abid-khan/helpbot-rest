@@ -1,0 +1,6 @@
+
+ssquid:S00116"QRename this field "SCOPES" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ÿ ¥ şÿÿÿÿ8•ŠÛÀ»+
+xsquid:S00117"VRename this local variable name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¥‰Ææûÿÿÿÿ8•ŠÛÀ»+
+xsquid:S00117"VRename this local variable name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Øñáîÿÿÿÿÿ8•ŠÛÀ»+
+xsquid:S00117"VRename this local variable name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(³‹¿¡ûÿÿÿÿ8•ŠÛÀ»+
+¥squid:S1160"ƒRefactor this method to throw at most one checked exception instead of: java.io.IOException, java.security.GeneralSecurityException(ÈÔõûÿÿÿÿ8•ŠÛÀ»+

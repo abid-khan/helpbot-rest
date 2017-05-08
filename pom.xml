@@ -43,11 +43,9 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.atlassian.jira/jira-rest-java-client -->
 		<dependency>
@@ -97,10 +95,34 @@
 			<artifactId>google-oauth-client-jetty</artifactId>
 			<version>1.22.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.oauth.core/oauth -->
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth</artifactId>
+			<version>20100601-atlassian-2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.oauth.core/oauth-consumer -->
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth-consumer</artifactId>
+			<version>20100601-atlassian-2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.oauth.core/oauth-httpclient4 -->
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth-httpclient4</artifactId>
+			<version>20100601-atlassian-2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-calendar</artifactId>
 			<version>v3-rev243-1.22.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.51</version>
 		</dependency>
 	</dependencies>
 

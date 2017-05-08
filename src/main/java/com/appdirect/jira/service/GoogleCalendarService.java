@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.appdirect.jira.props.OAuth;
 import com.appdirect.jira.vo.Meeting;
+import com.appdirect.jira.vo.Meetings;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -35,34 +36,34 @@ public class GoogleCalendarService {
     JsonFactory jsonFactory;
 
 
-    public List<Meeting> findMeetings(final Credential credential){
+    public Meetings findMeetings(final Credential credential, final int maxResult) {
         List<Meeting> meetings = new ArrayList<Meeting>();
-        try{
+        try {
             Calendar calendarService = getCalendarService(credential);
             DateTime now = new DateTime(System.currentTimeMillis());
             Events events = calendarService.events().list("primary")
-                    .setMaxResults(10)
+                    .setMaxResults(maxResult)
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
             if (events.isEmpty()) {
                 log.info("No meeting present");
-                return meetings;
+            } else {
+                log.info("Building meeting detail");
+                for (Event event : events.getItems()) {
+                    log.info("Meeting summary {}", event.getSummary());
+                    meetings.add(Meeting.builder().summary(event.getSummary()).startTime(event.getStart().getDateTime().getValue()).build());
+                }
+                log.info("Meetings count {}", meetings.size());
             }
-
-            log.info("Building meeting detail");
-            for (Event event : events.getItems()) {
-                log.info("Meeting summary {}", event.getSummary());
-                meetings.add(Meeting.builder().summary(event.getSummary()).startTime(event.getStart().getDateTime().getValue()).build());
-            }
-            log.info("Meetings count {}", meetings.size());
-        }catch (Exception  ex){
-            log.error("Failed to get meeting for credential {} due to {}",credential.toString(), ex);
+        } catch (Exception ex) {
+            log.error("Failed to get meeting for credential {} due to {}", credential.toString(), ex);
         }
 
-        return meetings;
+        return Meetings.builder().items(meetings).build();
     }
+
     /**
      * @param credential
      * @return

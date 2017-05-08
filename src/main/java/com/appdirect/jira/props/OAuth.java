@@ -15,5 +15,4 @@ public class OAuth {
     private String directory;
     private String googleCallback;
     private String googleAppName;
-
 }

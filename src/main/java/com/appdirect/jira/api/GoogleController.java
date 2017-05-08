@@ -1,6 +1,7 @@
 package com.appdirect.jira.api;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,9 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import com.appdirect.jira.helper.google.OAuthHelper;
+import com.appdirect.jira.helper.google.GoogleOAuthHelper;
 import com.appdirect.jira.props.OAuth;
 import com.appdirect.jira.service.GoogleCalendarService;
+import com.appdirect.jira.vo.Meetings;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 
@@ -33,7 +35,7 @@ public class GoogleController {
     @Autowired
     private OAuth oAuth;
     @Autowired
-    private OAuthHelper OAuthHelper;
+    private GoogleOAuthHelper GoogleOAuthHelper;
     @Autowired
     private GoogleCalendarService googleCalendarService;
 
@@ -41,17 +43,19 @@ public class GoogleController {
     @Path("/meetings")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response meetings(@QueryParam("userId") String userId) {
+    public Response meetings(@QueryParam("userId") String userId, @DefaultValue("10") @QueryParam("maxCount") int maxCount) {
+        Meetings meetings;
         try {
             log.info("Request received to get meetings for userId {}", userId);
-            Credential credential = OAuthHelper.loadCredential(userId);
+            Credential credential = GoogleOAuthHelper.loadCredential(userId);
             if (null == credential) {
                 log.info("No credential present for userId {}.Generating oauth URL", userId);
-                //Credential not present;ask user to authorize calendar access
-                return Response.serverError().entity(OAuthHelper.getOAuthUrl(userId)).type(MediaType.APPLICATION_JSON).build();
+                meetings = Meetings.builder().oAuthUrl(GoogleOAuthHelper.getOAuthUrl(userId)).build();
+            } else {
+                log.info("Found saved credential for userId {}. Fetching meeting details", userId);
+                meetings = googleCalendarService.findMeetings(credential, maxCount);
             }
-            log.info("Found saved credential for userId {}. Fetching meeting details", userId);
-            return Response.status(200).entity(googleCalendarService.findMeetings(credential)).type(MediaType.APPLICATION_JSON)
+            return Response.status(200).entity(meetings).type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception ex) {
             return Response.serverError().entity(null).type(MediaType.APPLICATION_JSON)

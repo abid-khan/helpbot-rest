@@ -12,7 +12,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 public class Authentication {
-    private String userName;
-    private String password;
     private String url;
+    private String baseUrl;
+    private String requestTokenUrl;
+    private String authorizationUrl;
+    private String accessTokenUrl;
+    private String oauthSignType;
+    private String consumerKey;
+    private String consumerSecret;
+    private String callbackUrl;
+    private String privateKey;
 }

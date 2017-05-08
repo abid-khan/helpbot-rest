@@ -19,7 +19,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeReque
 @Component
 @Slf4j
 @EnableConfigurationProperties(OAuth.class)
-public class OAuthHelper {
+public class GoogleOAuthHelper {
     @Autowired
     private OAuth oAuth;
 
