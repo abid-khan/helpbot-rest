@@ -45,7 +45,7 @@ public class JiraRestClientHelper {
      * @return <code>JiraRestClient</code>
      */
     public JiraRestClient jiraRestClient(String accessToken, String secret) {
-        URI endURI = URI.create(authentication.getUrl());
+        URI endURI = URI.create(authentication.getUrl() == null ? authentication.getBaseUrl() : authentication.getUrl());
         return jiraRestClientFactory.create(endURI, new AuthenticationHandler() {
             @Override
             public void configure(Request request) {
