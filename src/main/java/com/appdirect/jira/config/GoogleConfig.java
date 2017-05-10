@@ -56,7 +56,7 @@ public class GoogleConfig {
         return new GoogleAuthorizationCodeFlow.Builder(
                 httpTransport, jsonFactory, clientSecrets, SCOPES)
                 .setDataStoreFactory(fileDataStoreFactory)
-                .setAccessType("online")
+                .setAccessType("offline")
                 .build();
     }
 }

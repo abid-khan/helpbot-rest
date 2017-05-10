@@ -51,9 +51,10 @@ public class GoogleCalendarService {
                 log.info("No meeting present");
             } else {
                 log.info("Building meeting detail");
-                for (Event event : events.getItems()) {
+                List<Event> eventList = events.getItems();
+                for (Event event : eventList) {
                     log.info("Meeting summary {}", event.getSummary());
-                    meetings.add(Meeting.builder().summary(event.getSummary()).startTime(event.getStart().getDateTime().getValue()).hangoutLink(event.getHangoutLink()).description(event.getDescription()).location(event.getLocation()).build());
+                    meetings.add(Meeting.builder().id(event.getId()).summary(event.getSummary()).startTime(event.getStart().getDateTime() != null ? event.getStart().getDateTime().getValue() : null).hangoutLink(event.getHangoutLink()).description(event.getDescription()).location(event.getLocation()).color(event.getColorId()).kind(event.getKind()).build());
                 }
                 log.info("Meetings count {}", meetings.size());
             }

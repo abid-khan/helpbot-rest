@@ -11,9 +11,12 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Meeting {
+    private String id;
+    private String kind;
     private String summary;
     private Long startTime;
     private String hangoutLink;
     private String description;
     private String location;
+    private String color;
 }
