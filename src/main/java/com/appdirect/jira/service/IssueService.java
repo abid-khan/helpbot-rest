@@ -51,7 +51,23 @@ public class IssueService {
         Promise<SearchResult> searchJqlPromise = jiraRestClient.getSearchClient().searchJql(query);
         for (BasicIssue basicIssue : searchJqlPromise.claim().getIssues()) {
             Issue issue = jiraRestClient.getIssueClient().getIssue(basicIssue.getKey()).claim();
-            issues.add(com.appdirect.jira.vo.Issue.builder().url(buildIssueUrl(basicIssue.getKey())).key(issue.getKey()).summary(issue.getSummary()).reporter(User.builder().name(issue.getReporter().getName()).build()).build());
+            issues.add(com.appdirect.jira.vo.Issue.builder()
+                    .url(buildIssueUrl(issue.getKey()))
+                    .key(issue.getKey())
+                    .summary(issue.getSummary())
+                    .description(issue.getDescription())
+                    .reporter(User.builder().name(issue.getReporter().getName()).displayName(issue.getReporter().getDisplayName()).build())
+                    .project(Project.builder().name(issue.getProject().getName()).build())
+                    .status(issue.getStatus().getName())
+                    .resolution(issue.getResolution().getName())
+                    .assignee(User.builder().name(issue.getAssignee().getName()).displayName(issue.getAssignee().getDisplayName()).build())
+                    .priority(issue.getPriority().getName())
+                    .createdDate(issue.getCreationDate().getMillis())
+                    .dueDate(issue.getDueDate().getMillis())
+                    .fixVersions(buildFixVersion(issue))
+                    .affectedVersions(buildAffectedVersion(issue))
+                    .fields(buildFields(issue))
+                    .build());
 
         }
         return Issues.builder().issues(issues).build();
