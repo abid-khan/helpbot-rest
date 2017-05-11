@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.appdirect.jira.helper.jira.JiraRestClientHelper;
 import com.appdirect.jira.props.Authentication;
 import com.appdirect.jira.props.Url;
+import com.appdirect.jira.vo.Comment;
 import com.appdirect.jira.vo.Field;
 import com.appdirect.jira.vo.Issues;
 import com.appdirect.jira.vo.Project;
@@ -38,7 +39,6 @@ public class IssueService {
     private Authentication authentication;
 
     /**
-     *
      * @param query
      * @param accessToken
      * @param secret
@@ -58,7 +58,6 @@ public class IssueService {
     }
 
     /**
-     *
      * @param taskId
      * @param accessToken
      * @param secret
@@ -92,42 +91,57 @@ public class IssueService {
 
 
     /**
-     *
      * @param issue
      * @return
      */
-    private List<Version> buildFixVersion(Issue issue){
+    private List<Version> buildFixVersion(Issue issue) {
         List<Version> fixedVersion = new ArrayList<>();
-        for(com.atlassian.jira.rest.client.domain.Version version :  issue.getFixVersions()){
+        for (com.atlassian.jira.rest.client.domain.Version version : issue.getFixVersions()) {
             fixedVersion.add(Version.builder().name(version.getName()).description(version.getDescription()).isArchieved(version.isArchived()).isReleased(version.isReleased()).build());
         }
         return fixedVersion;
     }
 
     /**
-     *
      * @param issue
      * @return
      */
-    private List<Version> buildAffectedVersion(Issue issue){
+    private List<Version> buildAffectedVersion(Issue issue) {
         List<Version> fixedVersion = new ArrayList<>();
-        for(com.atlassian.jira.rest.client.domain.Version version :  issue.getAffectedVersions()){
+        for (com.atlassian.jira.rest.client.domain.Version version : issue.getAffectedVersions()) {
             fixedVersion.add(Version.builder().name(version.getName()).description(version.getDescription()).isArchieved(version.isArchived()).isReleased(version.isReleased()).build());
         }
         return fixedVersion;
     }
 
     /**
-     *
      * @param issue
      * @return
      */
-    private List<Field> buildFields(Issue issue){
+    private List<Field> buildFields(Issue issue) {
         List<Field> fields = new ArrayList<>();
-        for(com.atlassian.jira.rest.client.domain.Field field : issue.getFields()){
+        for (com.atlassian.jira.rest.client.domain.Field field : issue.getFields()) {
             fields.add(Field.builder().name(field.getName()).type(field.getType()).value(field.getValue()).build());
         }
         return fields;
+    }
+
+    /**
+     *
+     * @param taskId
+     * @param accessToken
+     * @param secret
+     * @return
+     */
+    public List<Comment> findComments(String taskId, String accessToken, String secret) {
+        log.info("Fetching comments for taskId {}", taskId);
+        JiraRestClient jiraRestClient = jiraRestClientHelper.jiraRestClient(accessToken, secret);
+        Issue issue = jiraRestClient.getIssueClient().getIssue(taskId).claim();
+        List<Comment> comments = new ArrayList<>();
+        for (com.atlassian.jira.rest.client.domain.Comment comment : issue.getComments()) {
+            comments.add(Comment.builder().body(comment.getBody()).auther(User.builder().name(comment.getAuthor().getName()).displayName(comment.getAuthor().getDisplayName()).build()).createdDate(comment.getCreationDate().getMillis()).updatedDate(comment.getUpdateDate().getMillis()).build());
+        }
+        return comments;
     }
 
     /**

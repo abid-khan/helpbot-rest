@@ -1,5 +1,7 @@
 package com.appdirect.jira.api;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,6 +22,7 @@ import com.appdirect.jira.repository.JiraUserRepository;
 import com.appdirect.jira.service.IssueService;
 import com.appdirect.jira.service.ProjectService;
 import com.appdirect.jira.type.IssueType;
+import com.appdirect.jira.vo.Comment;
 import com.appdirect.jira.vo.Issue;
 import com.appdirect.jira.vo.Issues;
 
@@ -85,6 +88,17 @@ public class JiraController {
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
         Issue issue = issueService.findIssueDetail(jiraId, jiraUser.getAccessToken(), jiraUser.getSecret());
         return Response.ok().entity(issue).type(MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+    @GET
+    @Path("/issues/{id}/comments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getComments(@QueryParam("userId") String userId, @QueryParam("jiraId") String jiraId) {
+        log.info("Request received to get comments of jiraId {} fo userId", jiraId, userId);
+        JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
+        List<Comment> comments = issueService.findComments(jiraId, jiraUser.getAccessToken(), jiraUser.getSecret());
+        return Response.ok().entity(comments).type(MediaType.APPLICATION_JSON)
                 .build();
     }
 
