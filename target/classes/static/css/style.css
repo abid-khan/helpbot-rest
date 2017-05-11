@@ -1,0 +1,73 @@
+body {
+    background-color: #F5F5F5;
+}
+.navbar {
+    height: 50px;
+    background-color: #fff;
+    color: #043263;
+    border-bottom: 2px solid #043263;
+}
+
+.navbar.google{
+    background-color: #F4F4F4;
+    border-bottom: 2px solid #707070;
+}
+
+.navbar .navbar-head {
+    padding: 5px 0px 5px 5px;
+}
+.navbar .navbar-head .logo-jira {
+    background-image: url(/images/jira_logo.png);
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    float: left;
+}
+
+
+.navbar .navbar-head .logo-google {
+    background-image: url(/images/google_logo.jpg);
+    width: 75px;
+    height: 75px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    float: left;
+}
+
+.navbar .navbar-head .logo-text {
+    font-size: 28px;
+    font-family: 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
+    float: left;
+    padding: 7px 0px 0px 0px;
+}
+
+
+.container {
+    min-height: 800px;
+    background-color: #F5F5F5;
+}
+.container .inner-container {
+    background-color: #FFFFFF;
+    height: 300px;
+    width: 600px;
+    margin: 200px auto;
+    border: 1px solid #A0A0A0;
+    border-radius: 5px;
+}
+.container .inner-container .text {
+    font-size: 28px;
+    color: #707070;
+    text-align: center;
+    margin: 0% 0px;
+    line-height: 50px;
+}
+
+.container .inner-container .thumbsup {
+    background-image: url(/images/thumsup.jpeg);
+    width: 100px;
+    height: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 50px auto 12px auto;
+}

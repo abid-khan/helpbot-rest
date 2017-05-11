@@ -9,4 +9,5 @@ public class JiraApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JiraApplication.class, args);
 	}
+	
 }
