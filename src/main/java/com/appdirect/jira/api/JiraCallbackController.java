@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.appdirect.jira.entity.JiraUser;
 import com.appdirect.jira.helper.jira.JiraOAuthHelper;
@@ -28,7 +29,7 @@ public class JiraCallbackController {
     private JiraUserRepository jiraUserRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/callback", produces = {org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public String success(@RequestParam("oauth_token") String oAuthToken, @RequestParam("oauth_verifier") String oAuthVerifier) throws IOException {
+    public ModelAndView success(@RequestParam("oauth_token") String oAuthToken, @RequestParam("oauth_verifier") String oAuthVerifier) throws IOException {
         log.info("oAuthToken is {} and oAuthVerifier is {}", oAuthToken, oAuthVerifier);
         JiraUser jiraUser = jiraUserRepository.findByRequestToken(oAuthToken);
         String accessToken =  jiraOAuthHelper.getAccessToken(oAuthToken,jiraUser.getSecret(),oAuthVerifier);
@@ -36,6 +37,8 @@ public class JiraCallbackController {
         jiraUser.setAccessToken(accessToken);
         jiraUser.setVerifirer(oAuthVerifier);
         jiraUserRepository.save(jiraUser);
-        return  "jiraSuccess";
+        ModelAndView mav = new ModelAndView("jiraSuccess");
+        mav.addObject("jiraUser", jiraUser);
+        return  mav;
     }
 }

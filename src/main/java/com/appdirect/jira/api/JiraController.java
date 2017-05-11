@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -83,7 +84,7 @@ public class JiraController {
     @GET
     @Path("/issues/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getIssueDetail(@QueryParam("userId") String userId, @QueryParam("jiraId") String jiraId) {
+    public Response getIssueDetail(@QueryParam("userId") String userId, @PathParam("id") String jiraId) {
         log.info("Request received to get details of jiraId {} fo userId", jiraId, userId);
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
         Issue issue = issueService.findIssueDetail(jiraId, jiraUser.getAccessToken(), jiraUser.getSecret());
@@ -94,7 +95,7 @@ public class JiraController {
     @GET
     @Path("/issues/{id}/comments")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getComments(@QueryParam("userId") String userId, @QueryParam("jiraId") String jiraId) {
+    public Response getComments(@QueryParam("userId") String userId, @PathParam("id") String jiraId) {
         log.info("Request received to get comments of jiraId {} fo userId", jiraId, userId);
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
         List<Comment> comments = issueService.findComments(jiraId, jiraUser.getAccessToken(), jiraUser.getSecret());

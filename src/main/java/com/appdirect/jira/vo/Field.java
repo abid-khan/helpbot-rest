@@ -13,5 +13,4 @@ import lombok.Setter;
 public class Field {
     private String name;
     private String type;
-    private Object value;
 }

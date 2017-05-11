@@ -40,7 +40,7 @@ public class OAuthController {
     @Path("/jira")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response jira(@QueryParam("userId") String userId) {
+    public Response jira(@QueryParam("userId") String userId,@QueryParam("channelId") String channelId,@QueryParam("teamId") String teamId) {
         JiraOauth jiraOauth = null;
         JiraUser jiraUser = null;
         String url = null;
@@ -49,7 +49,7 @@ public class OAuthController {
 
             if (null == jiraUser || jiraUser.getAccessToken() == null) {
                 OAuthHolder OAuthHolder = jiraOAuthHelper.getRequestToken(userId);
-                jiraUser = JiraUser.builder().userId(userId).requestToken(OAuthHolder.getToken()).secret(OAuthHolder.getSecret()).build();
+                jiraUser = JiraUser.builder().userId(userId).requestToken(OAuthHolder.getToken()).secret(OAuthHolder.getSecret()).channelId(channelId).teamId(teamId).build();
                 jiraUserRepository.save(jiraUser);
                 url = jiraOAuthHelper.getAuthorizeUrlForToken(jiraUser.getRequestToken());
             }
@@ -65,7 +65,7 @@ public class OAuthController {
     @Path("/google")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response google(@QueryParam("userId") String userId) {
+    public Response google(@QueryParam("userId") String userId,@QueryParam("channelId") String channelId,@QueryParam("teamId") String teamId) {
         JiraOauth jiraOauth = null;
         JiraUser jiraUser = null;
         String url = null;
@@ -73,7 +73,7 @@ public class OAuthController {
             Credential credential = googleOAuthHelper.loadCredential(userId);
             if (null == credential) {
                 log.info("No credential present for userId {}.Generating oauth URL", userId);
-                url= googleOAuthHelper.getOAuthUrl(userId);
+                url= googleOAuthHelper.getOAuthUrl(userId,channelId,teamId);
             }
 
             return Response.status(200).entity(JiraOauth.builder().url(url).build()).type(MediaType.APPLICATION_JSON)

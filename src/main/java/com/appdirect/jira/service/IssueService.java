@@ -137,7 +137,7 @@ public class IssueService {
     private List<Field> buildFields(Issue issue) {
         List<Field> fields = new ArrayList<>();
         for (com.atlassian.jira.rest.client.domain.Field field : issue.getFields()) {
-            fields.add(Field.builder().name(field.getName()).type(field.getType()).value(field.getValue()).build());
+            fields.add(Field.builder().name(field.getName()).type(field.getType()).build());
         }
         return fields;
     }

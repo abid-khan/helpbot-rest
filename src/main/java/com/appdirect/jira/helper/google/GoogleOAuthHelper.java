@@ -26,7 +26,7 @@ public class GoogleOAuthHelper {
     @Autowired
     private GoogleAuthorizationCodeFlow flow;
 
-    public String getOAuthUrl(String userId) {
+    public String getOAuthUrl(String userId,String channelId, String teamId) {
         String loginUrl = null;
         try {
             final GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
@@ -37,6 +37,9 @@ public class GoogleOAuthHelper {
         return null;
     }
 
+    public String buildState(String userId,String channelId, String teamId){
+        return  userId.concat("-").concat(channelId).concat("-").concat(teamId);
+    }
     /**
      * @param userId
      * @return

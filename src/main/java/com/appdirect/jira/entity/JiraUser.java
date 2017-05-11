@@ -18,6 +18,8 @@ public class JiraUser {
     @Id
     private String id;
     private String userId;
+    private String channelId;
+    private String teamId;
     private String requestToken;
     private String secret;
     private String accessToken;
