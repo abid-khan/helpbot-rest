@@ -30,7 +30,7 @@ public class GoogleOAuthHelper {
         String loginUrl = null;
         try {
             final GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
-            return url.setRedirectUri(oAuth.getGoogleCallback()).setState(userId).build();
+            return url.setRedirectUri(oAuth.getGoogleCallback()).setState(buildState(userId,channelId,teamId)).build();
         } catch (Exception ex) {
             log.error("Failed to generate login url due to  {}", ex);
         }

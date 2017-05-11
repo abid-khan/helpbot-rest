@@ -1,5 +1,7 @@
 package com.appdirect.jira.vo;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
