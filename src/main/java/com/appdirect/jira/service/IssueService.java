@@ -34,7 +34,7 @@ public class IssueService {
     @Autowired
     private Authentication authentication;
 
-    public Issues findMyOpenIssues(String query, String accessToken, String secret) {
+    public Issues findIssues(String query, String accessToken, String secret) {
         log.info("Fetching issues for query {}", query);
         JiraRestClient jiraRestClient = jiraRestClientHelper.jiraRestClient(accessToken, secret);
         List<com.appdirect.jira.vo.Issue> issues = new ArrayList<com.appdirect.jira.vo.Issue>();

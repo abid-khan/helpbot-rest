@@ -19,6 +19,8 @@ import com.appdirect.jira.props.IssueQuery;
 import com.appdirect.jira.repository.JiraUserRepository;
 import com.appdirect.jira.service.IssueService;
 import com.appdirect.jira.service.ProjectService;
+import com.appdirect.jira.type.IssueType;
+import com.appdirect.jira.vo.Issues;
 
 /**
  * Created by abidkhan on 25/04/17.
@@ -47,36 +49,29 @@ public class JiraController {
     @GET
     @Path("/projects")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllProjects(@QueryParam("userId") String userId){
+    public Response getAllProjects(@QueryParam("userId") String userId) {
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
         return Response.ok().entity(projectService.findAllProjects(jiraUser.getAccessToken(), jiraUser.getSecret())).type(MediaType.APPLICATION_JSON)
                 .build();
     }
 
     @GET
-    @Path("/issues/myopen")
+    @Path("/issues")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMyIssues(@QueryParam("userId") String userId) {
+    public Response getMyIssues(@QueryParam("userId") String userId, @QueryParam("type") String type) {
+        Issues issues = null;
         JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
-        return Response.ok().entity(issueService.findMyOpenIssues(issueQuery.getMyOpen(), jiraUser.getAccessToken(), jiraUser.getSecret())).type(MediaType.APPLICATION_JSON)
-                .build();
-    }
+        if (IssueType.MYOPEN.getType().equals(type)) {
+            issues = issueService.findIssues(issueQuery.getMyOpen(), jiraUser.getAccessToken(), jiraUser.getSecret());
+        } else if (IssueType.IAMMENTIONED.getType().equals(type)) {
+            issues = issueService.findIssues(issueQuery.getIAmMentioned(), jiraUser.getAccessToken(), jiraUser.getSecret());
+        } else if (IssueType.REPORTEDBYME.getType().equals(type)) {
+            issues = issueService.findIssues(issueQuery.getReportedByMe(), jiraUser.getAccessToken(), jiraUser.getSecret());
 
-    @GET
-    @Path("/issues/reported-by-me")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMyReportedIssues(@QueryParam("userId") String userId) {
-        JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
-        return Response.ok().entity(issueService.findMyOpenIssues(issueQuery.getReportedByMe(), jiraUser.getAccessToken(), jiraUser.getSecret())).type(MediaType.APPLICATION_JSON)
-                .build();
-    }
+        } else {
 
-    @GET
-    @Path("/issues/i-am-mentioned")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMentionedIssues(@QueryParam("userId") String userId) {
-        JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
-        return Response.ok().entity(issueService.findMyOpenIssues(issueQuery.getIAmMentioned(), jiraUser.getAccessToken(), jiraUser.getSecret())).type(MediaType.APPLICATION_JSON)
+        }
+        return Response.ok().entity(issues).type(MediaType.APPLICATION_JSON)
                 .build();
     }
 
