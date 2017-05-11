@@ -10,6 +10,7 @@ import lombok.Setter;
 @Builder
 @Setter
 @Getter
-public class Reporter {
+public class User {
     private String name;
+    private String displayName;
 }

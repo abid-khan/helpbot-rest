@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import com.appdirect.jira.helper.jira.JiraRestClientHelper;
 import com.appdirect.jira.props.Authentication;
 import com.appdirect.jira.props.Url;
+import com.appdirect.jira.vo.Field;
 import com.appdirect.jira.vo.Issues;
-import com.appdirect.jira.vo.Reporter;
+import com.appdirect.jira.vo.Project;
+import com.appdirect.jira.vo.User;
+import com.appdirect.jira.vo.Version;
 import com.atlassian.jira.rest.client.JiraRestClient;
 import com.atlassian.jira.rest.client.domain.BasicIssue;
 import com.atlassian.jira.rest.client.domain.Issue;
@@ -34,6 +37,13 @@ public class IssueService {
     @Autowired
     private Authentication authentication;
 
+    /**
+     *
+     * @param query
+     * @param accessToken
+     * @param secret
+     * @return
+     */
     public Issues findIssues(String query, String accessToken, String secret) {
         log.info("Fetching issues for query {}", query);
         JiraRestClient jiraRestClient = jiraRestClientHelper.jiraRestClient(accessToken, secret);
@@ -41,10 +51,83 @@ public class IssueService {
         Promise<SearchResult> searchJqlPromise = jiraRestClient.getSearchClient().searchJql(query);
         for (BasicIssue basicIssue : searchJqlPromise.claim().getIssues()) {
             Issue issue = jiraRestClient.getIssueClient().getIssue(basicIssue.getKey()).claim();
-            issues.add(com.appdirect.jira.vo.Issue.builder().url(buildIssueUrl(basicIssue.getKey())).key(issue.getKey()).summary(issue.getSummary()).reporter(Reporter.builder().name(issue.getReporter().getName()).build()).build());
+            issues.add(com.appdirect.jira.vo.Issue.builder().url(buildIssueUrl(basicIssue.getKey())).key(issue.getKey()).summary(issue.getSummary()).reporter(User.builder().name(issue.getReporter().getName()).build()).build());
 
         }
         return Issues.builder().issues(issues).build();
+    }
+
+    /**
+     *
+     * @param taskId
+     * @param accessToken
+     * @param secret
+     * @return issue detail
+     */
+    public com.appdirect.jira.vo.Issue findIssueDetail(String taskId, String accessToken, String secret) {
+        log.info("Fetching detail for taskId {}", taskId);
+        JiraRestClient jiraRestClient = jiraRestClientHelper.jiraRestClient(accessToken, secret);
+        Issue issue = jiraRestClient.getIssueClient().getIssue(taskId).claim();
+        com.appdirect.jira.vo.Issue issueVo = com.appdirect.jira.vo.Issue.builder()
+                .url(buildIssueUrl(issue.getKey()))
+                .key(issue.getKey())
+                .summary(issue.getSummary())
+                .description(issue.getDescription())
+                .reporter(User.builder().name(issue.getReporter().getName()).displayName(issue.getReporter().getDisplayName()).build())
+                .project(Project.builder().name(issue.getProject().getName()).build())
+                .status(issue.getStatus().getName())
+                .resolution(issue.getResolution().getName())
+                .assignee(User.builder().name(issue.getAssignee().getName()).displayName(issue.getAssignee().getDisplayName()).build())
+                .priority(issue.getPriority().getName())
+                .createdDate(issue.getCreationDate().getMillis())
+                .dueDate(issue.getDueDate().getMillis())
+                .fixVersions(buildFixVersion(issue))
+                .affectedVersions(buildAffectedVersion(issue))
+                .fields(buildFields(issue))
+                .build();
+
+
+        return issueVo;
+    }
+
+
+    /**
+     *
+     * @param issue
+     * @return
+     */
+    private List<Version> buildFixVersion(Issue issue){
+        List<Version> fixedVersion = new ArrayList<>();
+        for(com.atlassian.jira.rest.client.domain.Version version :  issue.getFixVersions()){
+            fixedVersion.add(Version.builder().name(version.getName()).description(version.getDescription()).isArchieved(version.isArchived()).isReleased(version.isReleased()).build());
+        }
+        return fixedVersion;
+    }
+
+    /**
+     *
+     * @param issue
+     * @return
+     */
+    private List<Version> buildAffectedVersion(Issue issue){
+        List<Version> fixedVersion = new ArrayList<>();
+        for(com.atlassian.jira.rest.client.domain.Version version :  issue.getAffectedVersions()){
+            fixedVersion.add(Version.builder().name(version.getName()).description(version.getDescription()).isArchieved(version.isArchived()).isReleased(version.isReleased()).build());
+        }
+        return fixedVersion;
+    }
+
+    /**
+     *
+     * @param issue
+     * @return
+     */
+    private List<Field> buildFields(Issue issue){
+        List<Field> fields = new ArrayList<>();
+        for(com.atlassian.jira.rest.client.domain.Field field : issue.getFields()){
+            fields.add(Field.builder().name(field.getName()).type(field.getType()).value(field.getValue()).build());
+        }
+        return fields;
     }
 
     /**

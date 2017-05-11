@@ -1,5 +1,7 @@
 package com.appdirect.jira.vo;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +16,16 @@ public class Issue {
     private String url;
     private String key;
     private String summary;
-    private Reporter reporter;
+    private String description;
+    private Project project;
+    private String status;
+    private String resolution;
+    private User reporter;
+    private User assignee;
+    private String priority;
+    private Long createdDate;
+    private Long dueDate;
+    private List<Version> fixVersions;
+    private List<Version> affectedVersions;
+    private List<Field> fields;
 }

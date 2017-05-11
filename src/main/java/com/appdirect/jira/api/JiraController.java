@@ -20,6 +20,7 @@ import com.appdirect.jira.repository.JiraUserRepository;
 import com.appdirect.jira.service.IssueService;
 import com.appdirect.jira.service.ProjectService;
 import com.appdirect.jira.type.IssueType;
+import com.appdirect.jira.vo.Issue;
 import com.appdirect.jira.vo.Issues;
 
 /**
@@ -72,6 +73,18 @@ public class JiraController {
 
         }
         return Response.ok().entity(issues).type(MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+
+    @GET
+    @Path("/issues/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getIssueDetail(@QueryParam("userId") String userId, @QueryParam("jiraId") String jiraId) {
+        log.info("Request received to get details of jiraId {} fo userId", jiraId, userId);
+        JiraUser jiraUser = jiraUserRepository.findByUserId(userId);
+        Issue issue = issueService.findIssueDetail(jiraId, jiraUser.getAccessToken(), jiraUser.getSecret());
+        return Response.ok().entity(issue).type(MediaType.APPLICATION_JSON)
                 .build();
     }
 
