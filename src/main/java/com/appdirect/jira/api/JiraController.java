@@ -74,7 +74,7 @@ public class JiraController {
             issues = issueService.findIssues(issueQuery.getReportedByMe(), jiraUser.getAccessToken(), jiraUser.getSecret());
 
         } else {
-
+            issues = issueService.findIssues(issueQuery.getMyOpen(), jiraUser.getAccessToken(), jiraUser.getSecret());
         }
         return Response.ok().entity(issues).type(MediaType.APPLICATION_JSON)
                 .build();

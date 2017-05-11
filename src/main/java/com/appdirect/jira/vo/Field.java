@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Field {
-    private String name;
-    private String type;
+	private String name;
+	private String type;
 }
