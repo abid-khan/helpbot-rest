@@ -35,7 +35,7 @@ public class GoogleController {
     @Autowired
     private OAuth oAuth;
     @Autowired
-    private GoogleOAuthHelper GoogleOAuthHelper;
+    private GoogleOAuthHelper googleOAuthHelper;
     @Autowired
     private GoogleCalendarService googleCalendarService;
 
@@ -46,13 +46,13 @@ public class GoogleController {
     public Response meetings(@QueryParam("userId") String userId,@QueryParam("channelId") String channelId,@QueryParam("teamId") String teamId, @DefaultValue("10") @QueryParam("maxCount") int maxCount) {
         Meetings meetings;
         try {
-            log.info("Request received to get meetings for userId {}", userId);
-            Credential credential = GoogleOAuthHelper.loadCredential(userId);
+            log.info("Request received to get meetings for userId {}, channelId {} , teamId {}", userId,channelId,teamId);
+            Credential credential = googleOAuthHelper.loadCredential(googleOAuthHelper.buildState(userId,channelId,teamId));
             if (null == credential) {
                 log.info("No credential present for userId {}.Generating oauth URL", userId);
-                meetings = Meetings.builder().oAuthUrl(GoogleOAuthHelper.getOAuthUrl(userId,channelId,teamId)).build();
+                meetings = Meetings.builder().oAuthUrl(googleOAuthHelper.getOAuthUrl(userId,channelId,teamId)).build();
             } else {
-                log.info("Found saved credential for userId {}. Fetching meeting details", userId);
+                log.info("Found saved credential for userId {}, channelId {} , teamId {}", userId,channelId,teamId);
                 meetings = googleCalendarService.findMeetings(credential, maxCount);
             }
             return Response.status(200).entity(meetings).type(MediaType.APPLICATION_JSON)

@@ -70,9 +70,9 @@ public class OAuthController {
         JiraUser jiraUser = null;
         String url = null;
         try {
-            Credential credential = googleOAuthHelper.loadCredential(userId);
+            Credential credential = googleOAuthHelper.loadCredential(googleOAuthHelper.buildState(userId,channelId,teamId));
             if (null == credential) {
-                log.info("No credential present for userId {}.Generating oauth URL", userId);
+                log.info("No credential present for userId {} channelId {} teamId {}.Generating oauth URL", userId,channelId,teamId);
                 url= googleOAuthHelper.getOAuthUrl(userId,channelId,teamId);
             }
 

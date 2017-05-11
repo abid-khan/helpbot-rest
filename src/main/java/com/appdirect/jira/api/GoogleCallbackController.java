@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.appdirect.jira.entity.JiraUser;
 import com.appdirect.jira.props.OAuth;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -37,11 +36,13 @@ public class GoogleCallbackController {
         final Credential credential = flow.createAndStoreCredential(response, state);
         ModelAndView mav = new ModelAndView("success");
         String[] tokens= state.split("-");
-        JiraUser jiraUser = JiraUser.builder().userId(tokens[0]).channelId(tokens[1]).teamId(tokens[2]).build();
-        mav.addObject("jiraUser", jiraUser);
+        mav.addObject("slackLink", buildSlackLink(tokens[2],tokens[1]));
         return mav;
     }
 
 
+    private String buildSlackLink(String teamId,String userId){
+        return "slack://user?team="+teamId + "&id="+userId;
+    }
 
 }
