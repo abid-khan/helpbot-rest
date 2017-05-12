@@ -39,7 +39,7 @@ public class JiraCallbackController {
         jiraUserRepository.save(jiraUser);
         ModelAndView mav = new ModelAndView("jiraSuccess");
         mav.addObject("jiraUser", jiraUser);
-        mav.addObject("slackLink", buildSlackLink(jiraUser.getTeamId(),jiraUser.getUserId()));
+        mav.addObject("slackLink", buildSlackLink(jiraUser.getTeamId(),jiraUser.getChannelId()));
         return  mav;
     }
 
