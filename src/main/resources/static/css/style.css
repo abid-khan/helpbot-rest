@@ -44,12 +44,11 @@ body {
 
 
 .container {
-    min-height: 800px;
     background-color: #F5F5F5;
 }
 .container .inner-container {
     background-color: #FFFFFF;
-    height: 300px;
+    height: 325px;
     width: 600px;
     margin: 200px auto;
     border: 1px solid #A0A0A0;
@@ -59,8 +58,40 @@ body {
     font-size: 28px;
     color: #707070;
     text-align: center;
-    margin: 0% 0px;
+    margin: 0px 0px 16px 0px;
     line-height: 50px;
+}
+
+.container .inner-container .btn{
+    background: #2ab27b;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    font-family: Slack-Lato,appleLogo,sans-serif;
+    line-height: 1.2rem;
+    font-weight: 900;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-decoration: none;
+    cursor: pointer;
+    text-shadow: 0 1px 1px rgba(0,0,0,.1);
+    border: none;
+    border-radius: .25rem;
+    box-shadow: none;
+    position: relative;
+    display: inline-block;
+    vertical-align: bottom;
+    text-align: center;
+    white-space: nowrap;
+    margin: 0;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    padding: 8px 14px 9px;
+    font-size: 15px;
+    margin: 0px auto;
+    display: block;
+    width: 115px;
 }
 
 .container .inner-container .thumbsup {
